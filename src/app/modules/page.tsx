@@ -1,0 +1,188 @@
+"use client";
+
+import React, { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { Search, Play, CheckCircle, Clock, Star, BookOpen } from 'lucide-react';
+import { useAuth } from '@/components/auth-provider';
+import { Module } from '@/types';
+import Link from 'next/link';
+import { modules } from '@/data/modules';
+
+const difficultyColors = {
+  Beginner: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
+  Intermediate: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',
+  Advanced: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+};
+
+export default function ModulesPage() {
+  const { user } = useAuth();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [difficultyFilter, setDifficultyFilter] = useState<string>('all');
+
+  const filteredModules = useMemo(() => {
+    return modules.filter(module => {
+      const matchesSearch = module.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          module.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          module.topics.some(topic => topic.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+      const matchesDifficulty = difficultyFilter === 'all' || module.difficulty === difficultyFilter;
+      
+      return matchesSearch && matchesDifficulty;
+    });
+  }, [searchTerm, difficultyFilter]);
+
+
+
+  return (
+    <div className="max-w-6xl mx-auto space-y-8">
+      {/* Header */}
+      <div className="text-center">
+        <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-4">
+          Learning Modules
+        </h1>
+        <p className="text-xl text-muted-foreground">
+          Master C++ programming step by step
+        </p>
+      </div>
+
+      {/* Search and Filter */}
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search modules..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+        <select
+          value={difficultyFilter}
+          onChange={(e) => setDifficultyFilter(e.target.value)}
+          className="px-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <option value="all">All Difficulties</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+
+      {/* Progress Summary */}
+      {user && (
+        <div className="bg-card border border-border rounded-lg p-6">
+          <div className="grid md:grid-cols-4 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-bold text-blue-500">{modules.length}</div>
+              <div className="text-sm text-muted-foreground">Total Modules</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-green-500">
+                {modules.filter(m => user.completedModules.includes(m.id)).length}
+              </div>
+              <div className="text-sm text-muted-foreground">Completed</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-yellow-500">
+                {Math.round((user.completedModules.length / modules.length) * 100)}%
+              </div>
+              <div className="text-sm text-muted-foreground">Progress</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-purple-500">
+                {modules.reduce((total, m) => total + (user.completedModules.includes(m.id) ? m.xpReward : 0), 0)}
+              </div>
+              <div className="text-sm text-muted-foreground">XP Earned</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modules Grid */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredModules.map((module, index) => {
+          const isCompleted = user?.completedModules.includes(module.id) || false;
+          
+          return (
+            <motion.div
+              key={module.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="group"
+            >
+              <Link href={`/modules/${module.id}`}>
+                <div className="bg-card border border-border rounded-lg p-6 hover:shadow-lg transition-all duration-300 h-full">
+                  {/* Header */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center space-x-2">
+                      <BookOpen className="w-5 h-5 text-primary" />
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${difficultyColors[module.difficulty]}`}>
+                        {module.difficulty}
+                      </span>
+                    </div>
+                    {isCompleted && (
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                    )}
+                  </div>
+
+                  {/* Title and Description */}
+                  <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
+                    {module.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
+                    {module.description}
+                  </p>
+
+                  {/* Topics */}
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {module.topics.slice(0, 3).map((topic) => (
+                      <span
+                        key={topic}
+                        className="px-2 py-1 bg-muted text-xs rounded-md text-muted-foreground"
+                      >
+                        {topic}
+                      </span>
+                    ))}
+                    {module.topics.length > 3 && (
+                      <span className="px-2 py-1 bg-muted text-xs rounded-md text-muted-foreground">
+                        +{module.topics.length - 3} more
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                      <div className="flex items-center space-x-1">
+                        <Clock className="w-4 h-4" />
+                        <span>{module.estimatedTime}m</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Star className="w-4 h-4" />
+                        <span>{module.xpReward} XP</span>
+                      </div>
+                    </div>
+                    <Play className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Empty State */}
+      {filteredModules.length === 0 && (
+        <div className="text-center py-12">
+          <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-medium mb-2">No modules found</h3>
+          <p className="text-muted-foreground">
+            Try adjusting your search or filter criteria.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
