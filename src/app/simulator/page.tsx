@@ -43,7 +43,7 @@ export default function SimulatorPage() {
   const [executionSteps, setExecutionSteps] = useState<ExecutionStep[]>([]);
   const [activeTab, setActiveTab] = useState<'output' | 'memory'>('output');
   const [showLineNumbers, setShowLineNumbers] = useState(true);
-  // const [fontSize, setFontSize] = useState(14);
+  const [fontSize] = useState(14);
   const editorRef = useRef<{ getValue: () => string; deltaDecorations: (oldDecorations: unknown[], newDecorations: unknown[]) => unknown[] } | null>(null);
 
   // Function to parse line number from stderr
