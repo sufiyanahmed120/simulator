@@ -7,39 +7,6 @@ import { Send, Copy, Check, Bot, User, Loader2 } from 'lucide-react';
 import { ChatMessage } from '@/types';
 import { generateId } from '@/lib/utils';
 
-const fallbackResponses = [
-  {
-    content: "In C++, variables are containers for storing data values. You declare them using a data type followed by a name. For example:\n\n```cpp\nint age = 25;\ndouble price = 19.99;\nstring name = \"John\";\n```\n\nEach variable has a specific data type that determines what kind of data it can store.",
-    codeBlocks: [
-      {
-        language: "cpp",
-        code: "int age = 25;\ndouble price = 19.99;\nstring name = \"John\";"
-      }
-    ]
-  },
-  {
-    content: "Control flow statements in C++ help you make decisions and repeat code. Here are the main ones:\n\n**If-else statements:**\n```cpp\nif (condition) {\n    // code to execute if condition is true\n} else {\n    // code to execute if condition is false\n}\n```\n\n**Loops:**\n```cpp\nfor (int i = 0; i < 10; i++) {\n    cout << i << endl;\n}\n```",
-    codeBlocks: [
-      {
-        language: "cpp",
-        code: "if (condition) {\n    // code to execute if condition is true\n} else {\n    // code to execute if condition is false\n}"
-      },
-      {
-        language: "cpp",
-        code: "for (int i = 0; i < 10; i++) {\n    cout << i << endl;\n}"
-      }
-    ]
-  },
-  {
-    content: "Functions in C++ allow you to group code into reusable blocks. Here's how to create and use them:\n\n```cpp\n// Function declaration\nint add(int a, int b) {\n    return a + b;\n}\n\n// Function call\nint result = add(5, 3);\n```\n\nFunctions help make your code more organized and reusable.",
-    codeBlocks: [
-      {
-        language: "cpp",
-        code: "// Function declaration\nint add(int a, int b) {\n    return a + b;\n}\n\n// Function call\nint result = add(5, 3);"
-      }
-    ]
-  }
-];
 
 export default function TutorPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -113,29 +80,25 @@ export default function TutorPage() {
         };
         setMessages(prev => [...prev, assistantMessage]);
       } else {
-        // Use fallback response
-        const fallbackIndex = Math.floor(Math.random() * fallbackResponses.length);
-        const fallback = fallbackResponses[fallbackIndex];
+        // Show error message from API
         const assistantMessage: ChatMessage = {
           id: generateId(),
           role: 'assistant',
-          content: fallback.content,
+          content: "Sorry, I'm having trouble right now. Please try again later.",
           timestamp: new Date(),
-          codeBlocks: fallback.codeBlocks
+          codeBlocks: []
         };
         setMessages(prev => [...prev, assistantMessage]);
       }
     } catch (error) {
       console.error('Error sending message:', error);
-      // Use fallback response on error
-      const fallbackIndex = Math.floor(Math.random() * fallbackResponses.length);
-      const fallback = fallbackResponses[fallbackIndex];
+      // Show error message on network/other errors
       const assistantMessage: ChatMessage = {
         id: generateId(),
         role: 'assistant',
-        content: fallback.content,
+        content: "Sorry, I'm having trouble right now. Please try again later.",
         timestamp: new Date(),
-        codeBlocks: fallback.codeBlocks
+        codeBlocks: []
       };
       setMessages(prev => [...prev, assistantMessage]);
     } finally {

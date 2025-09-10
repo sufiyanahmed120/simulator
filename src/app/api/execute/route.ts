@@ -15,16 +15,12 @@ export async function POST(request: NextRequest) {
 
     // Check if Judge0 API key is available
     if (!process.env.RAPIDAPI_KEY) {
-      // Return mock execution for demo
       return NextResponse.json({
-        stdout: `Name: John
-Age: 25
-Height: 1.75m
-Birth year: 1999`,
-        stderr: '',
-        exitCode: 0,
-        executionTime: 150,
-        memory: 2048
+        stdout: '',
+        stderr: 'RAPIDAPI_KEY not configured. Please add your RapidAPI key to .env.local',
+        exitCode: 1,
+        executionTime: 0,
+        memory: 0
       });
     }
 
@@ -44,7 +40,14 @@ Birth year: 1999`,
     });
 
     if (!createResponse.ok) {
-      throw new Error('Failed to create submission');
+      const errorText = await createResponse.text();
+      return NextResponse.json({
+        stdout: '',
+        stderr: `API Error: ${createResponse.status} - ${errorText}`,
+        exitCode: 1,
+        executionTime: 0,
+        memory: 0
+      });
     }
 
     const submission = await createResponse.json();
@@ -64,7 +67,14 @@ Birth year: 1999`,
       });
 
       if (!getResponse.ok) {
-        throw new Error('Failed to get submission result');
+        const errorText = await getResponse.text();
+        return NextResponse.json({
+          stdout: '',
+          stderr: `API Error: ${getResponse.status} - ${errorText}`,
+          exitCode: 1,
+          executionTime: 0,
+          memory: 0
+        });
       }
 
       result = await getResponse.json();
@@ -78,7 +88,13 @@ Birth year: 1999`,
     }
 
     if (!result) {
-      throw new Error('Execution timeout');
+      return NextResponse.json({
+        stdout: '',
+        stderr: 'Execution timeout - code took too long to compile/run',
+        exitCode: 1,
+        executionTime: 0,
+        memory: 0
+      });
     }
 
     // Handle different status codes
@@ -131,7 +147,7 @@ Birth year: 1999`,
       default:
         return NextResponse.json({
           stdout: result.stdout || '',
-          stderr: result.stderr || 'Unknown Error',
+          stderr: result.stderr || `Unknown Error (Status: ${result.status.id})`,
           exitCode: result.exit_code || 1,
           executionTime: result.time || 0,
           memory: result.memory || 0
@@ -141,16 +157,13 @@ Birth year: 1999`,
   } catch (error) {
     console.error('Execution API error:', error);
     
-    // Return mock execution on error
+    // Return real error instead of mock data
     return NextResponse.json({
-      stdout: `Name: John
-Age: 25
-Height: 1.75m
-Birth year: 1999`,
-      stderr: '',
-      exitCode: 0,
-      executionTime: 150,
-      memory: 2048
+      stdout: '',
+      stderr: `Network/Server Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      exitCode: 1,
+      executionTime: 0,
+      memory: 0
     });
   }
 }

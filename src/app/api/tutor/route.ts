@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import OpenAI from 'openai';
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,86 +12,77 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if OpenAI API key is available
-    if (!process.env.OPENAI_API_KEY) {
-      // Return fallback response
+    // Check if Gemini API key is available
+    if (!process.env.GEMINI_API_KEY) {
       return NextResponse.json({
-        content: "I'm here to help you with C++ programming! Since I'm currently in demo mode, here are some common C++ topics you can ask about:\n\n• Variables and data types\n• Control flow (if-else, loops)\n• Functions and parameters\n• Arrays and vectors\n• Pointers and references\n• Classes and objects\n\nWhat specific C++ concept would you like to learn about?",
+        content: "Sorry, I'm having trouble right now. Please try again later.",
         codeBlocks: []
       });
     }
 
-    // Prepare conversation history
-    const messages = [
-      {
-        role: 'system' as const,
-        content: `You are a helpful C++ programming tutor for college beginners. Your role is to:
+    // Initialize Gemini AI
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
 
-1. Explain C++ concepts in simple, beginner-friendly terms
-2. Provide clear code examples with proper syntax highlighting
-3. Help debug common programming issues
-4. Encourage learning and experimentation
-5. Use a friendly, encouraging tone
+    // Prepare conversation history in Gemini format
+    const chatHistory = history.map((msg: { role: string; content: string }) => ({
+      role: msg.role === 'user' ? 'user' : 'model',
+      parts: [{ text: msg.content }]
+    }));
 
-When providing code examples:
-- Always use proper C++ syntax
-- Include necessary headers (#include statements)
-- Add comments to explain what the code does
-- Format code blocks with \`\`\`cpp markers
+    // Create chat session with system instructions
+    const chat = model.startChat({
+      history: [
+        {
+          role: 'user',
+          parts: [{ text: `You are a C++ programming teacher for beginners. Your instructions:
+1. Explain C++ concepts in simple, beginner-friendly English
+2. Always provide clear and runnable C++ code examples inside \`\`\`cpp code blocks
+3. Break down complex topics into easy-to-understand steps
+4. Be encouraging and supportive
+5. Focus on practical examples that students can run and experiment with
+6. If asked about non-C++ topics, politely redirect to C++ programming
 
-Keep responses concise but informative. Focus on practical examples that students can run and experiment with.`
-      },
-      ...history.map((msg: { role: string; content: string }) => ({
-        role: msg.role as 'user' | 'assistant',
-        content: msg.content
-      })),
-      {
-        role: 'user' as const,
-        content: message
-      }
-    ];
-
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages,
-      max_tokens: 1000,
-      temperature: 0.7,
+Remember: Always use \`\`\`cpp for code blocks and make explanations beginner-friendly.` }]
+        },
+        {
+          role: 'model',
+          parts: [{ text: 'I understand! I\'m your C++ programming tutor. I\'ll explain concepts in simple terms and provide clear, runnable code examples. I\'m here to help you learn C++ step by step. What would you like to learn about today?' }]
+        },
+        ...chatHistory
+      ]
     });
 
-    const response = completion.choices[0]?.message?.content || '';
+    // Send user message
+    const result = await chat.sendMessage(message);
+    const response = await result.response;
+    const text = response.text();
 
-    // Extract code blocks from the response
+    // Extract code blocks from Gemini response
     const codeBlocks: { language: string; code: string }[] = [];
     const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
     let match;
 
-    while ((match = codeBlockRegex.exec(response)) !== null) {
+    while ((match = codeBlockRegex.exec(text)) !== null) {
       codeBlocks.push({
         language: match[1] || 'cpp',
         code: match[2].trim()
       });
     }
 
-    // Remove code blocks from the content for cleaner display
-    const content = response.replace(codeBlockRegex, '').trim();
+    const content = text.replace(codeBlockRegex, '').trim();
 
     return NextResponse.json({
       content,
       codeBlocks
     });
-
   } catch (error) {
     console.error('Tutor API error:', error);
-    
-    // Return fallback response on error
+
     return NextResponse.json({
-      content: "I'm having trouble connecting right now, but I can still help you with C++! Here's a quick tip about variables:\n\nIn C++, variables are containers for storing data. You declare them with a data type and name:\n\n```cpp\nint number = 42;\ndouble decimal = 3.14;\nstring text = \"Hello\";\n```\n\nTry asking me about a specific C++ topic, and I'll do my best to help!",
-      codeBlocks: [
-        {
-          language: "cpp",
-          code: "int number = 42;\ndouble decimal = 3.14;\nstring text = \"Hello\";"
-        }
-      ]
+      content: "Sorry, I'm having trouble right now. Please try again later.",
+      codeBlocks: []
     });
   }
 }
+

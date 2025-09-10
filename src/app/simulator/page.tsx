@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Play, StepForward, RotateCcw, Copy, Download, Upload, Settings, Terminal, HardDrive } from 'lucide-react';
 
 import { ExecutionResult, MemoryVariable, ExecutionStep } from '@/types';
@@ -44,7 +44,50 @@ export default function SimulatorPage() {
   const [activeTab, setActiveTab] = useState<'output' | 'memory'>('output');
   const [showLineNumbers, setShowLineNumbers] = useState(true);
   const [fontSize, setFontSize] = useState(14);
-  const editorRef = useRef<{ getValue: () => string } | null>(null);
+  const editorRef = useRef<{ getValue: () => string; deltaDecorations: (oldDecorations: any[], newDecorations: any[]) => any[] } | null>(null);
+
+  // Function to parse line number from stderr
+  const parseErrorLineNumber = (stderr: string): number | null => {
+    // Match patterns like: prog.cpp:5:10: error: ...
+    // or: main.cpp:12:1: error: ...
+    const match = stderr.match(/(?:prog\.cpp|main\.cpp|\.cpp):(\d+):/);
+    return match ? parseInt(match[1], 10) : null;
+  };
+
+  // Function to highlight error line in Monaco editor
+  const highlightErrorLine = (lineNumber: number | null) => {
+    if (!editorRef.current || !lineNumber) return;
+
+    const decorations = lineNumber ? [{
+      range: {
+        startLineNumber: lineNumber,
+        startColumn: 1,
+        endLineNumber: lineNumber,
+        endColumn: 1
+      },
+      options: {
+        isWholeLine: true,
+        className: 'error-line-highlight',
+        glyphMarginClassName: 'error-glyph-margin',
+        hoverMessage: { value: 'Compilation error on this line' }
+      }
+    }] : [];
+
+    editorRef.current.deltaDecorations([], decorations);
+  };
+
+  // Effect to highlight error lines when execution result changes
+  useEffect(() => {
+    if (executionResult?.stderr) {
+      const errorLine = parseErrorLineNumber(executionResult.stderr);
+      highlightErrorLine(errorLine);
+    } else {
+      // Clear decorations when no errors
+      if (editorRef.current) {
+        editorRef.current.deltaDecorations([], []);
+      }
+    }
+  }, [executionResult]);
 
   const runCode = async () => {
     if (!code.trim()) return;
@@ -53,6 +96,11 @@ export default function SimulatorPage() {
     setExecutionResult(null);
     setExecutionSteps([]);
     setCurrentStep(0);
+
+    // Clear any existing error highlights
+    if (editorRef.current) {
+      editorRef.current.deltaDecorations([], []);
+    }
 
     try {
       const response = await fetch('/api/execute', {
@@ -112,6 +160,11 @@ export default function SimulatorPage() {
     setIsStepping(false);
     setExecutionResult(null);
     setExecutionSteps([]);
+    
+    // Clear error highlights when resetting
+    if (editorRef.current) {
+      editorRef.current.deltaDecorations([], []);
+    }
   };
 
   const generateExecutionSteps = (code: string): ExecutionStep[] => {
@@ -359,7 +412,7 @@ export default function SimulatorPage() {
                       {executionResult.stderr && (
                         <div>
                           <div className="text-red-500 font-semibold mb-2">Errors:</div>
-                          <pre className="text-red-400 whitespace-pre-wrap">{executionResult.stderr}</pre>
+                          <pre className="text-red-400 whitespace-pre-wrap font-mono text-sm leading-relaxed">{executionResult.stderr}</pre>
                         </div>
                       )}
                       <div className="text-muted-foreground text-xs">
@@ -423,6 +476,17 @@ export default function SimulatorPage() {
           </div>
         </div>
       </div>
+
+      {/* Add CSS for error highlighting */}
+      <style jsx global>{`
+        .error-line-highlight {
+          background-color: rgba(207, 60, 60, 0.87) !important;
+          border-left: 3px solid #ff4444 !important;
+        }
+        .error-glyph-margin {
+          background-color: #ff4444 !important;
+        }
+      `}</style>
     </div>
   );
 }

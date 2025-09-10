@@ -169,18 +169,23 @@ export default function ModulePage() {
 
       {/* Action Buttons */}
       <div className="flex justify-center space-x-4">
-        <button
+        <motion.button
           onClick={() => router.push('/modules')}
-          className="px-6 py-3 border border-border rounded-lg hover:bg-muted transition-colors"
+          className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:from-blue-600 hover:to-purple-700"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           Back to Modules
-        </button>
-        <button
-          className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors flex items-center space-x-2"
+        </motion.button>
+        <motion.button
+          onClick={() => router.push('/simulator')}
+          className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:from-blue-600 hover:to-purple-700 flex items-center"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          <Play className="w-4 h-4" />
+          <Play className="w-4 h-4 mr-2" />
           <span>Start Practice</span>
-        </button>
+        </motion.button>
       </div>
     </div>
   );

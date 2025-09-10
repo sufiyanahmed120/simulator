@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { BookOpen, BarChart3, Code2, Play, MessageCircle } from 'lucide-react';
 
 export default function HomePage() {
-  return (
+    return (
     <div className="max-w-4xl mx-auto text-center space-y-12">
       {/* Hero Section */}
       <motion.div
@@ -67,7 +67,7 @@ export default function HomePage() {
           <h3 className="text-xl font-semibold">Interactive Modules</h3>
           <p className="text-muted-foreground">Learn C++ step by step with hands-on examples</p>
         </div>
-        
+
         <div className="text-center space-y-3">
           <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto">
             <Play className="w-8 h-8 text-white" />
@@ -75,7 +75,7 @@ export default function HomePage() {
           <h3 className="text-xl font-semibold">Code Simulator</h3>
           <p className="text-muted-foreground">Practice coding with real-time compilation</p>
         </div>
-        
+
         <div className="text-center space-y-3">
           <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto">
             <MessageCircle className="w-8 h-8 text-white" />
@@ -84,6 +84,6 @@ export default function HomePage() {
           <p className="text-muted-foreground">Get personalized help and guidance</p>
         </div>
       </motion.div>
-    </div>
+        </div>
   );
 }
