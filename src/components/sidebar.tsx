@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
   Code2, 
-  BookOpen, 
   MessageCircle, 
   Play, 
   User, 

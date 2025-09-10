@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Play, CheckCircle, Clock, Star, BookOpen, Code, Lightbulb, Target } from 'lucide-react';
 import { useAuth } from '@/components/auth-provider';
-import { Module } from '@/types';
+// import { Module } from '@/types';
 import { modules, moduleContent } from '@/data/modules';
 
 export default function ModulePage() {
@@ -15,16 +15,16 @@ export default function ModulePage() {
   const moduleId = params.moduleId as string;
 
   // Find the module data
-  const module = modules.find(m => m.id === moduleId);
+  const moduleData = modules.find(m => m.id === moduleId);
   const content = moduleContent[moduleId];
 
-  if (!module || !content) {
+  if (!moduleData || !content) {
     return (
       <div className="max-w-4xl mx-auto p-6">
         <div className="text-center py-12">
           <h1 className="text-2xl font-bold mb-4">Module Not Found</h1>
           <p className="text-muted-foreground mb-6">
-            The module you're looking for doesn't exist.
+            The module you&apos;re looking for doesn&apos;t exist.
           </p>
           <button
             onClick={() => router.push('/modules')}
@@ -37,7 +37,7 @@ export default function ModulePage() {
     );
   }
 
-  const isCompleted = user?.completedModules.includes(module.id) || false;
+  const isCompleted = user?.completedModules.includes(moduleData.id) || false;
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
@@ -50,8 +50,8 @@ export default function ModulePage() {
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div className="flex-1">
-          <h1 className="text-3xl font-bold gradient-text">{module.title}</h1>
-          <p className="text-muted-foreground">{module.description}</p>
+          <h1 className="text-3xl font-bold gradient-text">{moduleData.title}</h1>
+          <p className="text-muted-foreground">{moduleData.description}</p>
         </div>
       </div>
 
@@ -61,20 +61,20 @@ export default function ModulePage() {
           <div className="flex items-center justify-center space-x-2">
             <BookOpen className="w-5 h-5 text-primary" />
             <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-              module.difficulty === 'Beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' :
-              module.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' :
+              moduleData.difficulty === 'Beginner' ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' :
+              moduleData.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' :
               'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
             }`}>
-              {module.difficulty}
+              {moduleData.difficulty}
             </span>
           </div>
           <div className="flex items-center justify-center space-x-2">
             <Clock className="w-5 h-5 text-blue-500" />
-            <span className="text-sm text-muted-foreground">{module.estimatedTime}m</span>
+            <span className="text-sm text-muted-foreground">{moduleData.estimatedTime}m</span>
           </div>
           <div className="flex items-center justify-center space-x-2">
             <Star className="w-5 h-5 text-yellow-500" />
-            <span className="text-sm text-muted-foreground">{module.xpReward} XP</span>
+            <span className="text-sm text-muted-foreground">{moduleData.xpReward} XP</span>
           </div>
           <div className="flex items-center justify-center space-x-2">
             {isCompleted ? (
@@ -96,7 +96,7 @@ export default function ModulePage() {
           <span>Topics Covered</span>
         </h2>
         <div className="grid md:grid-cols-3 gap-3">
-          {module.topics.map((topic, index) => (
+          {moduleData.topics.map((topic, index) => (
             <div
               key={index}
               className="px-3 py-2 bg-muted rounded-lg text-sm text-center"

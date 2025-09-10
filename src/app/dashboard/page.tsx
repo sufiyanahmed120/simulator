@@ -8,10 +8,8 @@ import {
   BookOpen, 
   Play, 
   MessageCircle, 
-  Star, 
   Target,
-  TrendingUp,
-  Award
+  TrendingUp
 } from 'lucide-react';
 import { useAuth } from '@/components/auth-provider';
 
@@ -137,9 +135,8 @@ export default function DashboardPage() {
 
         {/* Achievements Card */}
         <motion.div
-          variants={itemVariants}
-          whileHover="hover"
           variants={cardVariants}
+          whileHover="hover"
           className="bg-card border border-border rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300"
         >
           <div className="flex items-center space-x-3 mb-4">

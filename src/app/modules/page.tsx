@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Play, CheckCircle, Clock, Star, BookOpen } from 'lucide-react';
 import { useAuth } from '@/components/auth-provider';
-import { Module } from '@/types';
+// import { Module } from '@/types';
 import Link from 'next/link';
 import { modules } from '@/data/modules';
 

@@ -37,14 +37,14 @@ int main() {
 export default function SimulatorPage() {
   const [code, setCode] = useState(defaultCode);
   const [isRunning, setIsRunning] = useState(false);
-  const [isStepping, setIsStepping] = useState(false);
+  // const [isStepping, setIsStepping] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [executionResult, setExecutionResult] = useState<ExecutionResult | null>(null);
   const [executionSteps, setExecutionSteps] = useState<ExecutionStep[]>([]);
   const [activeTab, setActiveTab] = useState<'output' | 'memory'>('output');
   const [showLineNumbers, setShowLineNumbers] = useState(true);
-  const [fontSize, setFontSize] = useState(14);
-  const editorRef = useRef<{ getValue: () => string; deltaDecorations: (oldDecorations: any[], newDecorations: any[]) => any[] } | null>(null);
+  // const [fontSize, setFontSize] = useState(14);
+  const editorRef = useRef<{ getValue: () => string; deltaDecorations: (oldDecorations: unknown[], newDecorations: unknown[]) => unknown[] } | null>(null);
 
   // Function to parse line number from stderr
   const parseErrorLineNumber = (stderr: string): number | null => {
