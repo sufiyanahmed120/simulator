@@ -14,7 +14,7 @@ import {
 import { useAuth } from '@/components/auth-provider';
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, signIn } = useAuth();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -49,8 +49,37 @@ export default function DashboardPage() {
     }
   };
 
+  // Show sign-in prompt if no user
+  if (!user) {
+    return (
+      <div className="max-w-4xl mx-auto text-center space-y-8 h-full flex flex-col justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="space-y-6"
+        >
+          <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-4">
+            Welcome to C++ Simulator
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            Sign in to track your progress and continue your learning journey
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={signIn}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            Sign In to Continue
+          </motion.button>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="max-w-6xl mx-auto space-y-8 h-full">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -59,7 +88,7 @@ export default function DashboardPage() {
         className="text-center"
       >
         <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-4">
-          Welcome back, {user?.displayName || 'Demo User'}!
+          Welcome back, {user.displayName}!
         </h1>
         <p className="text-xl text-muted-foreground">
           Continue your C++ learning journey
@@ -83,24 +112,24 @@ export default function DashboardPage() {
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold">Level {user?.level || 1}</h3>
+              <h3 className="text-lg font-semibold">Level {user.level}</h3>
               <p className="text-sm text-muted-foreground">XP Progress</p>
             </div>
           </div>
           
           <div className="space-y-3">
             <div className="flex justify-between text-sm">
-              <span>{user?.xp || 0} XP</span>
-              <span>{Math.floor((user?.xp || 0) / 100) * 100 + 100} XP</span>
+              <span>{user.xp} XP</span>
+              <span>{Math.floor(user.xp / 100) * 100 + 100} XP</span>
             </div>
             <div className="w-full bg-muted rounded-full h-2">
               <div 
                 className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-500"
-                style={{ width: `${((user?.xp || 0) % 100)}%` }}
+                style={{ width: `${(user.xp % 100)}%` }}
               />
             </div>
             <p className="text-xs text-muted-foreground">
-              {100 - ((user?.xp || 0) % 100)} XP to next level
+              {100 - (user.xp % 100)} XP to next level
             </p>
           </div>
         </motion.div>
@@ -117,7 +146,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <h3 className="text-lg font-semibold">
-                {user?.completedModules?.length || 0}
+                {user.completedModules.length}
               </h3>
               <p className="text-sm text-muted-foreground">Modules Completed</p>
             </div>
@@ -125,10 +154,10 @@ export default function DashboardPage() {
           
           <div className="space-y-3">
             <div className="text-3xl font-bold text-green-600">
-              {Math.round(((user?.completedModules?.length || 0) / 8) * 100)}%
+              {Math.round((user.completedModules.length / 8) * 100)}%
             </div>
             <p className="text-sm text-muted-foreground">
-              {8 - (user?.completedModules?.length || 0)} modules remaining
+              {8 - user.completedModules.length} modules remaining
             </p>
           </div>
         </motion.div>
@@ -145,7 +174,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <h3 className="text-lg font-semibold">
-                {user?.achievements?.length || 0}
+                {user.achievements.length}
               </h3>
               <p className="text-sm text-muted-foreground">Achievements</p>
             </div>
@@ -157,7 +186,7 @@ export default function DashboardPage() {
                 <div
                   key={i}
                   className={`w-3 h-3 rounded-full ${
-                    i <= (user?.achievements?.length || 0)
+                    i <= user.achievements.length
                       ? 'bg-yellow-500'
                       : 'bg-muted'
                   }`}
@@ -165,7 +194,7 @@ export default function DashboardPage() {
               ))}
             </div>
             <p className="text-sm text-muted-foreground">
-              {3 - (user?.achievements?.length || 0)} achievements to unlock
+              {3 - user.achievements.length} achievements to unlock
             </p>
           </div>
         </motion.div>

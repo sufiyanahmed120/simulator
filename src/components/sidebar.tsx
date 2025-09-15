@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -48,6 +48,20 @@ export function Sidebar() {
     setIsMobileOpen(false);
   };
 
+  // Toggle body class for sidebar state
+  useEffect(() => {
+    if (isCollapsed) {
+      document.body.classList.add('sidebar-collapsed');
+    } else {
+      document.body.classList.remove('sidebar-collapsed');
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('sidebar-collapsed');
+    };
+  }, [isCollapsed]);
+
   return (
     <>
       {/* Mobile Menu Button */}
@@ -68,25 +82,24 @@ export function Sidebar() {
 
       {/* Sidebar */}
       <div className={cn(
-        "fixed left-0 top-0 h-full bg-card border-r border-border transition-all duration-300 ease-in-out z-50 shadow-lg",
-        isCollapsed ? "w-20" : "w-72",
+        "sidebar fixed left-0 top-0 h-full bg-card border-r border-border z-50 shadow-lg",
         isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         {/* Logo Section */}
-        <div className="flex items-center justify-between h-20 px-6 border-b border-border bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20">
+        <div className="flex items-center justify-between h-20 px-6 border-b border-border bg-gradient-to-r from-blue-50 to-purple-50 dark:from-slate-900/50 dark:to-slate-800/50">
           {!isCollapsed && (
             <Link href="/" className="flex items-center space-x-3 group">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 ease-in-out">
+              <div className="w-10 h-10 bg-gradient-to-r from-emerald-600 to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 ease-in-out">
                 <Code2 className="w-6 h-6 text-white" />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold gradient-text">C++ Simulator</span>
-                <span className="text-xs text-muted-foreground">Learning Platform</span>
+                <span className="text-xl font-bold text-slate-900 dark:text-white">C++ Simulator</span>
+                <span className="text-xs text-slate-600 dark:text-slate-400">Learning Platform</span>
               </div>
             </Link>
           )}
           {isCollapsed && (
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto shadow-lg">
+            <div className="w-10 h-10 bg-gradient-to-r from-emerald-600 to-blue-600 rounded-xl flex items-center justify-center mx-auto shadow-lg">
               <Code2 className="w-6 h-6 text-white" />
             </div>
           )}
@@ -118,15 +131,15 @@ export function Sidebar() {
                   className={cn(
                     "flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 ease-in-out group hover:scale-105",
                     isActive
-                      ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-semibold shadow-md"
-                      : "text-muted-foreground hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800"
+                      ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold shadow-md"
+                      : "text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800"
                   )}
                   title={isCollapsed ? item.name : undefined}
                   onClick={closeMobileMenu}
                 >
                   <item.icon className={cn(
                     "w-6 h-6 flex-shrink-0 transition-all duration-300 ease-in-out",
-                    isActive ? "text-blue-600 dark:text-blue-400" : "group-hover:scale-110"
+                    isActive ? "text-emerald-600 dark:text-emerald-400" : "group-hover:scale-110"
                   )} />
                   {!isCollapsed && (
                     <span className="transition-all duration-300 ease-in-out">{item.name}</span>
@@ -138,12 +151,12 @@ export function Sidebar() {
         </nav>
 
         {/* Footer Section */}
-        <div className="border-t border-border p-4 space-y-3 bg-gradient-to-t from-gray-50 to-transparent dark:from-gray-900/20 dark:to-transparent">
+        <div className="border-t border-border p-4 space-y-3 bg-gradient-to-t from-slate-50 to-transparent dark:from-slate-900/30 dark:to-transparent">
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
             className={cn(
-              "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-muted-foreground hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 ease-in-out hover:scale-105",
+              "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300 ease-in-out hover:scale-105",
               isCollapsed && "justify-center"
             )}
             title={isCollapsed ? "Toggle theme" : undefined}
@@ -158,7 +171,7 @@ export function Sidebar() {
               <button
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 ease-in-out hover:scale-105",
+                  "w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300 ease-in-out hover:scale-105",
                   isCollapsed && "justify-center"
                 )}
                 title={isCollapsed ? user.displayName : undefined}
@@ -176,7 +189,7 @@ export function Sidebar() {
                 )}
                 {!isCollapsed && (
                   <div className="flex flex-col items-start">
-                    <span className="text-sm font-medium truncate">{user.displayName}</span>
+                    <span className="text-sm font-medium text-muted-foreground truncate">{user.displayName}</span>
                     <span className="text-xs text-muted-foreground">Online</span>
                   </div>
                 )}
@@ -193,7 +206,7 @@ export function Sidebar() {
                 >
                   <Link
                     href="/profile"
-                    className="flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+                    className="flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200"
                     onClick={() => setProfileDropdownOpen(false)}
                   >
                     <User className="w-4 h-4" />
@@ -201,7 +214,7 @@ export function Sidebar() {
                   </Link>
                   <Link
                     href="/settings"
-                    className="flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+                    className="flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200"
                     onClick={() => setProfileDropdownOpen(false)}
                   >
                     <Settings className="w-4 h-4" />
@@ -212,7 +225,7 @@ export function Sidebar() {
                       signOut();
                       setProfileDropdownOpen(false);
                     }}
-                    className="flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 w-full"
+                    className="flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 w-full"
                   >
                     <LogOut className="w-4 h-4" />
                     <span>Sign Out</span>
@@ -224,7 +237,7 @@ export function Sidebar() {
             <button
               onClick={signIn}
               className={cn(
-                "w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-3 rounded-lg text-base font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 ease-in-out hover:scale-105 shadow-lg hover:shadow-xl",
+                "w-full bg-gradient-to-r from-emerald-600 to-blue-600 text-white px-4 py-3 rounded-lg text-base font-medium hover:from-emerald-700 hover:to-blue-700 transition-all duration-300 ease-in-out hover:scale-105 shadow-lg hover:shadow-xl",
                 isCollapsed && "px-3"
               )}
               title={isCollapsed ? "Sign In" : undefined}

@@ -9,9 +9,9 @@ import Link from 'next/link';
 import { modules } from '@/data/modules';
 
 const difficultyColors = {
-  Beginner: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
-  Intermediate: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',
-  Advanced: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+  Beginner: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
+  Intermediate: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+  Advanced: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
 };
 
 export default function ModulesPage() {
@@ -74,23 +74,23 @@ export default function ModulesPage() {
         <div className="bg-card border border-border rounded-lg p-6">
           <div className="grid md:grid-cols-4 gap-4 text-center">
             <div>
-              <div className="text-2xl font-bold text-blue-500">{modules.length}</div>
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{modules.length}</div>
               <div className="text-sm text-muted-foreground">Total Modules</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-green-500">
+              <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
                 {modules.filter(m => user.completedModules.includes(m.id)).length}
               </div>
               <div className="text-sm text-muted-foreground">Completed</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-yellow-500">
+              <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
                 {Math.round((user.completedModules.length / modules.length) * 100)}%
               </div>
               <div className="text-sm text-muted-foreground">Progress</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-purple-500">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
                 {modules.reduce((total, m) => total + (user.completedModules.includes(m.id) ? m.xpReward : 0), 0)}
               </div>
               <div className="text-sm text-muted-foreground">XP Earned</div>
@@ -123,7 +123,7 @@ export default function ModulesPage() {
                       </span>
                     </div>
                     {isCompleted && (
-                      <CheckCircle className="w-5 h-5 text-green-500" />
+                      <CheckCircle className="w-5 h-5 text-emerald-500" />
                     )}
                   </div>
 

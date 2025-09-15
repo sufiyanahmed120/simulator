@@ -129,7 +129,7 @@ export default function TutorPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto h-[calc(100vh-200px)] flex flex-col">
+    <div className="max-w-4xl mx-auto h-full flex flex-col">
       {/* Header */}
       <div className="text-center mb-6">
         <h1 className="text-3xl font-bold gradient-text mb-2">AI Tutor</h1>

@@ -32,7 +32,7 @@ export default function RootLayout({
           <AuthProvider>
             <div className="min-h-screen bg-background">
               <Sidebar />
-              <main className="transition-all duration-300 ease-in-out pt-20 lg:pt-8 ml-0 lg:ml-20 xl:ml-72 p-4 lg:p-8 relative overflow-hidden">
+              <main className="main-content pt-20 lg:pt-8 p-4 lg:p-8 relative overflow-hidden">
                 {/* Animated Background */}
                 <div className="absolute inset-0 -z-10">
                   {/* Gradient Background */}

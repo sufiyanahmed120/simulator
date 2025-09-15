@@ -37,7 +37,7 @@ int main() {
 export default function SimulatorPage() {
   const [code, setCode] = useState(defaultCode);
   const [isRunning, setIsRunning] = useState(false);
-  // const [isStepping, setIsStepping] = useState(false);
+  const [isStepping, setIsStepping] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [executionResult, setExecutionResult] = useState<ExecutionResult | null>(null);
   const [executionSteps, setExecutionSteps] = useState<ExecutionStep[]>([]);
