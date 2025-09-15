@@ -33,6 +33,7 @@ const navigation = [
 ];
 
 export function Sidebar() {
+  const [mounted, setMounted] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -47,6 +48,10 @@ export function Sidebar() {
   const closeMobileMenu = () => {
     setIsMobileOpen(false);
   };
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Toggle body class for sidebar state
   useEffect(() => {
@@ -161,7 +166,7 @@ export function Sidebar() {
             )}
             title={isCollapsed ? "Toggle theme" : undefined}
           >
-            {theme === 'dark' ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+            {mounted && (theme === 'dark' ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />)}
             {!isCollapsed && <span>Toggle Theme</span>}
           </button>
 

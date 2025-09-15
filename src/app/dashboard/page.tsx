@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, easeInOut, easeOut } from 'framer-motion';
 import Link from 'next/link';
 import { 
   Trophy, 
@@ -33,7 +33,7 @@ export default function DashboardPage() {
       y: 0,
       transition: {
         duration: 0.5,
-        ease: "easeOut"
+        ease: easeOut
       }
     }
   };
@@ -44,7 +44,7 @@ export default function DashboardPage() {
       y: -5,
       transition: {
         duration: 0.2,
-        ease: "easeInOut"
+        ease: easeInOut
       }
     }
   };

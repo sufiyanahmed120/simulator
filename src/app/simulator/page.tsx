@@ -1,7 +1,9 @@
+
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Play, StepForward, RotateCcw, Copy, Download, Upload, Settings, Terminal, HardDrive } from 'lucide-react';
+import { editor } from 'monaco-editor';
 
 import { ExecutionResult, MemoryVariable, ExecutionStep } from '@/types';
 import dynamic from 'next/dynamic';
@@ -44,7 +46,7 @@ export default function SimulatorPage() {
   const [activeTab, setActiveTab] = useState<'output' | 'memory'>('output');
   const [showLineNumbers, setShowLineNumbers] = useState(true);
   const [fontSize] = useState(14);
-  const editorRef = useRef<{ getValue: () => string; deltaDecorations: (oldDecorations: unknown[], newDecorations: unknown[]) => unknown[] } | null>(null);
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
   // Function to parse line number from stderr
   const parseErrorLineNumber = (stderr: string): number | null => {
