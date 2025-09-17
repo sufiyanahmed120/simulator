@@ -13,7 +13,7 @@ const isFirebaseConfigured = () => {
   );
 };
 
-let app, auth, db, googleProvider;
+let app: any, auth: any, db: any, googleProvider: any;
 
 if (isFirebaseConfigured()) {
   const firebaseConfig = {
