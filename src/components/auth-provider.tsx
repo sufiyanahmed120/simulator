@@ -3,7 +3,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '@/types';
 import { auth, googleProvider, isFirebaseConfigured, db } from '@/lib/firebase';
-import { signInWithPopup, signOut as firebaseSignOut, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { 
+  signInWithPopup, 
+  signOut as firebaseSignOut, 
+  onAuthStateChanged, 
+  User as FirebaseUser 
+} from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 interface AuthContextType {
@@ -21,20 +26,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Convert Firebase user to our User type
+  // ✅ Convert Firebase user to our User type
   const createUserFromFirebase = async (firebaseUser: FirebaseUser): Promise<User> => {
     if (!db) throw new Error('Firebase not configured');
     
     const userDoc = doc(db, 'users', firebaseUser.uid);
     const userSnap = await getDoc(userDoc);
-    
+
+    // Normalize Firebase fields (fixes null vs undefined issue)
+    const email = firebaseUser.email ?? '';
+    const displayName = firebaseUser.displayName ?? 'User';
+    const photoURL = firebaseUser.photoURL ?? undefined;
+
     if (userSnap.exists()) {
       const userData = userSnap.data();
       return {
         uid: firebaseUser.uid,
-        email: firebaseUser.email || '',
-        displayName: firebaseUser.displayName || 'User',
-        photoURL: firebaseUser.photoURL,
+        email,
+        displayName,
+        photoURL,
         xp: userData.xp || 0,
         level: userData.level || 1,
         achievements: userData.achievements || [],
@@ -46,9 +56,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Create new user document
       const newUser: User = {
         uid: firebaseUser.uid,
-        email: firebaseUser.email || '',
-        displayName: firebaseUser.displayName || 'User',
-        photoURL: firebaseUser.photoURL,
+        email,
+        displayName,
+        photoURL,
         xp: 0,
         level: 1,
         achievements: [],
@@ -67,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Listen to authentication state changes
+  // ✅ Listen to authentication state changes
   useEffect(() => {
     if (!isFirebaseConfigured() || !auth) {
       setLoading(false);
@@ -92,7 +102,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe();
   }, []);
 
-  // Real sign in function
+  // ✅ Sign in with Google
   const signIn = async () => {
     if (!isFirebaseConfigured() || !auth || !googleProvider) {
       throw new Error('Firebase not configured. Please set up Firebase authentication.');
@@ -106,7 +116,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Real sign out function
+  // ✅ Sign out
   const signOutUser = async () => {
     if (!auth) return;
     
@@ -118,7 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Real update XP function
+  // ✅ Update XP
   const updateUserXP = async (xp: number) => {
     if (!user || !db) return;
     
@@ -139,7 +149,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Real complete module function
+  // ✅ Complete module
   const completeModule = async (moduleId: string, xpReward: number) => {
     if (!user || !db) return;
     
