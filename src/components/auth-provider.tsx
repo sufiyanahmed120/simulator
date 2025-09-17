@@ -1,7 +1,10 @@
 "use client";
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '@/types';
+import { auth, googleProvider, isFirebaseConfigured, db } from '@/lib/firebase';
+import { signInWithPopup, signOut as firebaseSignOut, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 interface AuthContextType {
   user: User | null;
@@ -16,45 +19,130 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading] = useState(false); // Set to false immediately since we're not loading anything
+  const [loading, setLoading] = useState(true);
 
-  // Mock sign in function
+  // Convert Firebase user to our User type
+  const createUserFromFirebase = async (firebaseUser: FirebaseUser): Promise<User> => {
+    if (!db) throw new Error('Firebase not configured');
+    
+    const userDoc = doc(db, 'users', firebaseUser.uid);
+    const userSnap = await getDoc(userDoc);
+    
+    if (userSnap.exists()) {
+      const userData = userSnap.data();
+      return {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email || '',
+        displayName: firebaseUser.displayName || 'User',
+        photoURL: firebaseUser.photoURL,
+        xp: userData.xp || 0,
+        level: userData.level || 1,
+        achievements: userData.achievements || [],
+        completedModules: userData.completedModules || [],
+        createdAt: userData.createdAt?.toDate() || new Date(),
+        lastLoginAt: new Date(),
+      };
+    } else {
+      // Create new user document
+      const newUser: User = {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email || '',
+        displayName: firebaseUser.displayName || 'User',
+        photoURL: firebaseUser.photoURL,
+        xp: 0,
+        level: 1,
+        achievements: [],
+        completedModules: [],
+        createdAt: new Date(),
+        lastLoginAt: new Date(),
+      };
+      
+      await setDoc(userDoc, {
+        ...newUser,
+        createdAt: new Date(),
+        lastLoginAt: new Date(),
+      });
+      
+      return newUser;
+    }
+  };
+
+  // Listen to authentication state changes
+  useEffect(() => {
+    if (!isFirebaseConfigured() || !auth) {
+      setLoading(false);
+      return;
+    }
+
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        try {
+          const userData = await createUserFromFirebase(firebaseUser);
+          setUser(userData);
+        } catch (error) {
+          console.error('Error creating user data:', error);
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Real sign in function
   const signIn = async () => {
-    console.warn('Firebase not configured. Running in demo mode.');
-    // Create a mock user for demo purposes
-    const mockUser: User = {
-      uid: 'demo-user-123',
-      email: 'demo@example.com',
-      displayName: 'Demo User',
-      photoURL: undefined,
-      xp: 0,
-      level: 1,
-      achievements: [],
-      completedModules: [],
-      createdAt: new Date(),
-      lastLoginAt: new Date(),
-    };
-    setUser(mockUser);
+    if (!isFirebaseConfigured() || !auth || !googleProvider) {
+      throw new Error('Firebase not configured. Please set up Firebase authentication.');
+    }
+    
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error) {
+      console.error('Error signing in:', error);
+      throw error;
+    }
   };
 
-  // Mock sign out function
+  // Real sign out function
   const signOutUser = async () => {
-    console.warn('Firebase not configured. Running in demo mode.');
-    setUser(null);
+    if (!auth) return;
+    
+    try {
+      await firebaseSignOut(auth);
+    } catch (error) {
+      console.error('Error signing out:', error);
+      throw error;
+    }
   };
 
-  // Mock update XP function
+  // Real update XP function
   const updateUserXP = async (xp: number) => {
-    if (!user) return;
+    if (!user || !db) return;
+    
     const newXP = user.xp + xp;
     const newLevel = Math.floor(newXP / 100) + 1;
     const updatedUser = { ...user, xp: newXP, level: newLevel };
-    setUser(updatedUser);
+    
+    try {
+      const userDoc = doc(db, 'users', user.uid);
+      await updateDoc(userDoc, {
+        xp: newXP,
+        level: newLevel,
+        lastLoginAt: new Date(),
+      });
+      setUser(updatedUser);
+    } catch (error) {
+      console.error('Error updating XP:', error);
+    }
   };
 
-  // Mock complete module function
+  // Real complete module function
   const completeModule = async (moduleId: string, xpReward: number) => {
-    if (!user) return;
+    if (!user || !db) return;
+    
     const newCompletedModules = [...user.completedModules, moduleId];
     const newXP = user.xp + xpReward;
     const newLevel = Math.floor(newXP / 100) + 1;
@@ -64,7 +152,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       level: newLevel, 
       completedModules: newCompletedModules 
     };
-    setUser(updatedUser);
+    
+    try {
+      const userDoc = doc(db, 'users', user.uid);
+      await updateDoc(userDoc, {
+        xp: newXP,
+        level: newLevel,
+        completedModules: newCompletedModules,
+        lastLoginAt: new Date(),
+      });
+      setUser(updatedUser);
+    } catch (error) {
+      console.error('Error completing module:', error);
+    }
   };
 
   return (
