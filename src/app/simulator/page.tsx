@@ -30,7 +30,8 @@ int main() {
     cout << "Height: " << height << "m" << endl;
     
     // Calculate and display
-    int birthYear = 2024 - age;
+    int currentYear = 2025;
+    int birthYear = currentYear - age;
     cout << "Birth year: " << birthYear << endl;
     
     return 0;
@@ -203,17 +204,28 @@ export default function SimulatorPage() {
           address: `0x${(0x3000 + i).toString(16)}`,
           scope: 'stack'
         });
-      } else if (line.includes('int birthYear = 2024 - age')) {
-        variables.push({
-          name: 'birthYear',
-          value: '1999',
-          type: 'int',
-          address: `0x${(0x4000 + i).toString(16)}`,
-          scope: 'stack'
-        });
+      } else if (line.includes('int birthYear = currentYear - age') || line.includes('int currentYear = 2025')) {
+        if (line.includes('int currentYear = 2025')) {
+          variables.push({
+            name: 'currentYear',
+            value: '2025',
+            type: 'int',
+            address: `0x${(0x3500 + i).toString(16)}`,
+            scope: 'stack'
+          });
+        }
+        if (line.includes('int birthYear = currentYear - age')) {
+          variables.push({
+            name: 'birthYear',
+            value: '2000',
+            type: 'int',
+            address: `0x${(0x4000 + i).toString(16)}`,
+            scope: 'stack'
+          });
+        }
       }
       
-      if (line.includes('cout') || line.includes('int birthYear')) {
+      if (line.includes('cout') || line.includes('int birthYear') || line.includes('int currentYear')) {
         steps.push({
           lineNumber: i + 1,
           variables: [...variables],

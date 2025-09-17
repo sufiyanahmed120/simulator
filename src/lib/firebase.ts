@@ -1,7 +1,7 @@
 // lib/firebase.ts
-import { initializeApp, getApps } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, getApps, FirebaseApp } from "firebase/app";
+import { Auth, getAuth, GoogleAuthProvider } from "firebase/auth";
+import { Firestore, getFirestore } from "firebase/firestore";
 
 // Check if Firebase environment variables are configured
 const isFirebaseConfigured = () => {
@@ -13,7 +13,10 @@ const isFirebaseConfigured = () => {
   );
 };
 
-let app: any, auth: any, db: any, googleProvider: any;
+let app: FirebaseApp | null = null;
+let auth: Auth | null = null;
+let db: Firestore | null = null;
+let googleProvider: GoogleAuthProvider | null = null;
 
 if (isFirebaseConfigured()) {
   const firebaseConfig = {
@@ -33,12 +36,7 @@ if (isFirebaseConfigured()) {
   db = getFirestore(app);
   googleProvider = new GoogleAuthProvider();
 } else {
-  // Firebase not configured - running in demo mode
-  console.log('Firebase not configured. Running in demo mode.');
-  app = null;
-  auth = null;
-  db = null;
-  googleProvider = null;
+  console.log("Firebase not configured. Running in demo mode.");
 }
 
 export { app, auth, db, googleProvider, isFirebaseConfigured };
