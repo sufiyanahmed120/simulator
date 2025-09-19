@@ -3,19 +3,17 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Play, CheckCircle, Clock, Star, BookOpen } from 'lucide-react';
-import { useAuth } from '@/components/auth-provider';
 // import { Module } from '@/types';
 import Link from 'next/link';
 import { modules } from '@/data/modules';
 
 const difficultyColors = {
-  Beginner: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
-  Intermediate: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
-  Advanced: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+  Beginner: 'bg-emerald-600 text-white font-bold',
+  Intermediate: 'bg-orange-600 text-white font-bold',
+  Advanced: 'bg-red-600 text-white font-bold'
 };
 
 export default function ModulesPage() {
-  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState<string>('all');
 
@@ -60,49 +58,47 @@ export default function ModulesPage() {
         <select
           value={difficultyFilter}
           onChange={(e) => setDifficultyFilter(e.target.value)}
-          className="px-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+          className="px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary [&>option]:bg-slate-900 [&>option]:text-white dark:[&>option]:bg-slate-800 dark:[&>option]:text-slate-100"
         >
-          <option value="all">All Difficulties</option>
-          <option value="Beginner">Beginner</option>
-          <option value="Intermediate">Intermediate</option>
-          <option value="Advanced">Advanced</option>
+          <option value="all" className="bg-white text-black dark:bg-slate-800 dark:text-white">All Difficulties</option>
+          <option value="Beginner" className="bg-white text-black dark:bg-slate-800 dark:text-white">Beginner</option>
+          <option value="Intermediate" className="bg-white text-black dark:bg-slate-800 dark:text-white">Intermediate</option>
+          <option value="Advanced" className="bg-white text-black dark:bg-slate-800 dark:text-white">Advanced</option>
         </select>
       </div>
 
       {/* Progress Summary */}
-      {user && (
-        <div className="bg-card border border-border rounded-lg p-6">
-          <div className="grid md:grid-cols-4 gap-4 text-center">
-            <div>
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{modules.length}</div>
-              <div className="text-sm text-muted-foreground">Total Modules</div>
+      <div className="bg-card border border-border rounded-lg p-6">
+        <div className="grid md:grid-cols-4 gap-4 text-center">
+          <div>
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{modules.length}</div>
+            <div className="text-sm text-muted-foreground">Total Modules</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+              0
             </div>
-            <div>
-              <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-                {modules.filter(m => user.completedModules.includes(m.id)).length}
-              </div>
-              <div className="text-sm text-muted-foreground">Completed</div>
+            <div className="text-sm text-muted-foreground">Completed</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
+              0%
             </div>
-            <div>
-              <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
-                {Math.round((user.completedModules.length / modules.length) * 100)}%
-              </div>
-              <div className="text-sm text-muted-foreground">Progress</div>
+            <div className="text-sm text-muted-foreground">Progress</div>
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+              0
             </div>
-            <div>
-              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {modules.reduce((total, m) => total + (user.completedModules.includes(m.id) ? m.xpReward : 0), 0)}
-              </div>
-              <div className="text-sm text-muted-foreground">XP Earned</div>
-            </div>
+            <div className="text-sm text-muted-foreground">XP Earned</div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Modules Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredModules.map((module, index) => {
-          const isCompleted = user?.completedModules.includes(module.id) || false;
+                      const isCompleted = false; // Module completion tracking removed
           
           return (
             <motion.div
@@ -118,7 +114,7 @@ export default function ModulesPage() {
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-2">
                       <BookOpen className="w-5 h-5 text-primary" />
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${difficultyColors[module.difficulty]}`}>
+                      <span className={`px-3 py-1 rounded-full text-xs ${difficultyColors[module.difficulty]}`}>
                         {module.difficulty}
                       </span>
                     </div>

@@ -3,12 +3,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Settings, Sun, Moon, Monitor, HelpCircle, Mail, MessageCircle, Github, BookOpen, Shield, Bell } from 'lucide-react';
-import { useAuth } from '@/components/auth-provider';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 
 export default function SettingsPage() {
-  const { user, signOut } = useAuth();
+  // Mock user data for demonstration
+  const user = { displayName: 'C++ Learner', email: 'learner@example.com' };
   const { theme, setTheme } = useTheme();
   const [notifications, setNotifications] = useState(true);
   const [emailUpdates, setEmailUpdates] = useState(false);
@@ -256,12 +256,6 @@ export default function SettingsPage() {
           </div>
           
           <div className="flex space-x-4">
-            <button
-              onClick={signOut}
-              className="px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors"
-            >
-              Sign Out
-            </button>
             <button className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors">
               Export Data
             </button>

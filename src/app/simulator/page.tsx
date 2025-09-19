@@ -273,9 +273,9 @@ export default function SimulatorPage() {
   const currentStepData = executionSteps[currentStep] || null;
 
   return (
-    <div className="max-w-7xl mx-auto h-[calc(100vh-200px)] flex flex-col">
+    <div className="w-full h-[calc(100vh-100px)] flex flex-col px-4">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 flex-shrink-0">
         <div>
           <h1 className="text-3xl font-bold gradient-text mb-2">Code Simulator</h1>
           <p className="text-muted-foreground">
@@ -311,10 +311,10 @@ export default function SimulatorPage() {
         </div>
       </div>
 
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-0">
         {/* Editor Section */}
         <div className="flex flex-col">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 flex-shrink-0">
             <h2 className="text-lg font-semibold">Editor</h2>
             <div className="flex items-center space-x-2">
               <button
@@ -350,40 +350,11 @@ export default function SimulatorPage() {
               }}
             />
           </div>
-
-          {/* Execution Controls */}
-          <div className="flex items-center space-x-2 mt-4">
-            <button
-              onClick={runCode}
-              disabled={isRunning}
-              className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
-            >
-              <Play className="w-4 h-4" />
-              <span>Run</span>
-            </button>
-            
-            <button
-              onClick={stepThroughCode}
-              disabled={isRunning}
-              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
-            >
-              <StepForward className="w-4 h-4" />
-              <span>Step</span>
-            </button>
-            
-            <button
-              onClick={resetExecution}
-              className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-            >
-              <RotateCcw className="w-4 h-4" />
-              <span>Reset</span>
-            </button>
-          </div>
         </div>
 
         {/* Output Section */}
         <div className="flex flex-col">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 flex-shrink-0">
             <h2 className="text-lg font-semibold">Output & Memory</h2>
             <div className="flex items-center space-x-1 bg-muted rounded-lg p-1">
               <button
@@ -489,6 +460,26 @@ export default function SimulatorPage() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Execution Controls - Bottom Section */}
+      <div className="flex items-center justify-center space-x-3 mt-4 flex-shrink-0">
+        <button
+          onClick={runCode}
+          disabled={isRunning}
+          className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+        >
+          <Play className="w-4 h-4" />
+          <span>Run</span>
+        </button>
+        
+        <button
+          onClick={resetExecution}
+          className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+        >
+          <RotateCcw className="w-4 h-4" />
+          <span>Reset</span>
+        </button>
       </div>
 
       {/* Add CSS for error highlighting */}

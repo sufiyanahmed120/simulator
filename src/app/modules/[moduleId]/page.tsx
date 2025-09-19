@@ -4,14 +4,12 @@ import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Play, CheckCircle, Clock, Star, BookOpen, Code, Lightbulb, Target } from 'lucide-react';
-import { useAuth } from '@/components/auth-provider';
 // import { Module } from '@/types';
 import { modules, moduleContent } from '@/data/modules';
 
 export default function ModulePage() {
   const params = useParams();
   const router = useRouter();
-  const { user } = useAuth();
   const moduleId = params.moduleId as string;
 
   // Find the module data
@@ -37,7 +35,7 @@ export default function ModulePage() {
     );
   }
 
-  const isCompleted = user?.completedModules.includes(moduleData.id) || false;
+  const isCompleted = false; // Module completion tracking removed
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">

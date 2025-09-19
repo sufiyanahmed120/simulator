@@ -81,9 +81,9 @@ export const modules: Module[] = [
   {
     id: 'oop',
     title: 'Object-Oriented Programming',
-    description: 'Learn OOP concepts including classes, inheritance, and polymorphism.',
+    description: 'Master comprehensive OOP concepts including classes, objects, encapsulation, inheritance, polymorphism, and abstraction in C++.',
     difficulty: 'Advanced',
-    topics: ['Constructors/Destructors', 'This pointer', 'Inheritance'],
+    topics: ['Class & Object', 'Encapsulation', 'Inheritance', 'Polymorphism', 'Abstraction', 'Constructor & Destructor', 'Methods & Attributes'],
     xpReward: 150,
     estimatedTime: 55,
     isCompleted: false,
@@ -142,26 +142,90 @@ int main() {
     ]
   },
   'variables-data-types': {
-    introduction: 'Variables are containers for storing data values in C++. Each variable has a specific data type that determines the size and layout of the variable\'s memory, the range of values that can be stored, and the set of operations that can be applied to the variable.',
+    introduction: 'Variables and Data Types are fundamental building blocks of C++ programming. Understanding these concepts is essential for effective programming and memory management.',
     examples: [
       {
-        title: 'Variable Declaration',
-        description: 'Different ways to declare and initialize variables.',
-        code: `int age = 25;                    // Integer
-double height = 5.9;           // Double precision float
-char grade = 'A';              // Character
-bool isStudent = true;         // Boolean
-string name = "John Doe";      // String`
+        title: '1. Variables in C++',
+        description: 'A variable is a named storage location in memory that holds a value which can change during program execution. It acts like a container to store data. You must declare a variable before using it, specifying its data type.',
+        code: `// Variable declaration and initialization
+int age = 25;                    // Integer variable
+double salary = 50000.50;       // Double precision variable
+char grade = 'A';               // Character variable
+bool isActive = true;           // Boolean variable
+string name = "John Doe";       // String variable
+
+// Using variables
+cout << "Name: " << name << endl;
+cout << "Age: " << age << endl;
+cout << "Salary: $" << salary << endl;`
       },
       {
-        title: 'Constants and Auto',
-        description: 'Using const for constants and auto for type inference.',
-        code: `const double PI = 3.14159;      // Constant
-const int MAX_SIZE = 100;      // Constant
+        title: '2. Basic Data Types',
+        description: 'A data type defines the kind of data a variable can hold. C++ provides several built-in basic data types.',
+        code: `// Basic Data Types Examples
+int number = 42;               // integers (whole numbers)
+float price = 19.99f;          // decimal numbers (single precision)
+double pi = 3.14159265359;     // decimal numbers (double precision)
+char letter = 'A';             // single character ('A', '9')
+bool isTrue = true;            // Boolean values (true / false)
+// void → represents no value (used in functions)
 
-auto number = 42;              // Auto-deduced as int
-auto text = "Hello";           // Auto-deduced as const char*
-auto decimal = 3.14;           // Auto-deduced as double`
+cout << "Integer: " << number << endl;
+cout << "Float: " << price << endl;
+cout << "Double: " << pi << endl;
+cout << "Character: " << letter << endl;
+cout << "Boolean: " << isTrue << endl;`
+      },
+      {
+        title: '3. Derived Data Types',
+        description: 'Data types that are built from basic data types to create more complex structures.',
+        code: `// Arrays
+int numbers[5] = {1, 2, 3, 4, 5};
+
+// Pointers
+int value = 100;
+int* ptr = &value;              // Pointer to integer
+
+// References
+int original = 50;
+int& ref = original;            // Reference to integer
+
+// Function type
+int add(int a, int b) {         // Function returning int
+    return a + b;
+}
+
+cout << "Array element: " << numbers[0] << endl;
+cout << "Pointer value: " << *ptr << endl;
+cout << "Reference value: " << ref << endl;`
+      },
+      {
+        title: '4. User-defined Data Types',
+        description: 'Custom data types created by programmers to model real-world entities and complex data structures.',
+        code: `// Structure
+struct Point {
+    int x, y;
+};
+
+// Class
+class Rectangle {
+private:
+    double length, width;
+public:
+    Rectangle(double l, double w) : length(l), width(w) {}
+    double area() { return length * width; }
+};
+
+// Enumeration
+enum Color { RED, GREEN, BLUE };
+
+// Usage
+Point p = {10, 20};
+Rectangle rect(5.0, 3.0);
+Color myColor = RED;
+
+cout << "Point: (" << p.x << ", " << p.y << ")" << endl;
+cout << "Rectangle area: " << rect.area() << endl;`
       }
     ],
     uses: [
@@ -429,64 +493,166 @@ dynamicArray = nullptr;  // Good practice`
     ]
   },
   'oop': {
-    introduction: 'Object-Oriented Programming (OOP) is a programming paradigm that organizes code into objects containing data and code. C++ supports OOP concepts including encapsulation, inheritance, and polymorphism, making it powerful for building complex software systems.',
+    introduction: 'Object-Oriented Programming (OOP) is a programming paradigm that organizes code into objects containing data and code. C++ supports comprehensive OOP concepts that enable building robust, maintainable, and scalable software systems.',
     examples: [
       {
-        title: 'Class Definition',
-        description: 'Creating a class with constructors and methods.',
-        code: `class Student {
+        title: '1. Class & Object',
+        description: 'Class is a blueprint for objects. Object is an instance of a class representing real-world entities.',
+        code: `class Car {
 private:
-    string name;
-    int age;
-    double gpa;
+    string brand;
+    int year;
 
 public:
-    // Constructor
-    Student(string n, int a, double g) {
-        name = n;
-        age = a;
-        gpa = g;
-    }
-    
-    // Methods
+    Car(string b, int y) : brand(b), year(y) {}
     void displayInfo() {
-        cout << "Name: " << name << endl;
-        cout << "Age: " << age << endl;
-        cout << "GPA: " << gpa << endl;
-    }
-    
-    double getGPA() { return gpa; }
-    void setGPA(double g) { gpa = g; }
-};`
-      },
-      {
-        title: 'Inheritance',
-        description: 'Creating derived classes that inherit from base classes.',
-        code: `class Person {
-protected:
-    string name;
-    int age;
-
-public:
-    Person(string n, int a) : name(n), age(a) {}
-    virtual void display() {
-        cout << "Name: " << name << ", Age: " << age << endl;
+        cout << "Brand: " << brand << ", Year: " << year << endl;
     }
 };
 
-class Employee : public Person {
+int main() {
+    Car myCar("Toyota", 2023);  // Object creation
+    myCar.displayInfo();
+    return 0;
+}`
+      },
+      {
+        title: '2. Encapsulation',
+        description: 'Binding data & methods together, controlling access with public, private, protected keywords.',
+        code: `class BankAccount {
 private:
-    string department;
-    double salary;
+    double balance;  // Private data
 
 public:
-    Employee(string n, int a, string dept, double sal)
-        : Person(n, a), department(dept), salary(sal) {}
+    BankAccount(double initial) : balance(initial) {}
     
-    void display() override {
-        Person::display();
-        cout << "Department: " << department << ", Salary: " << salary << endl;
+    // Public methods to access private data
+    void deposit(double amount) {
+        if(amount > 0) balance += amount;
     }
+    
+    double getBalance() { return balance; }
+};`
+      },
+      {
+        title: '3. Inheritance',
+        description: 'Reuse properties/behaviors from base class. Types: Single, Multiple, Multilevel, Hierarchical, Hybrid.',
+        code: `class Animal {  // Base class
+protected:
+    string name;
+public:
+    Animal(string n) : name(n) {}
+    virtual void sound() { cout << "Animal sound" << endl; }
+};
+
+class Dog : public Animal {  // Derived class
+public:
+    Dog(string n) : Animal(n) {}
+    void sound() override { cout << name << " barks!" << endl; }
+};`
+      },
+      {
+        title: '4. Polymorphism',
+        description: 'Compile-time (function overloading) & Run-time (virtual functions) polymorphism.',
+        code: `class Shape {
+public:
+    virtual double area() = 0;  // Pure virtual function
+};
+
+class Circle : public Shape {
+private:
+    double radius;
+public:
+    Circle(double r) : radius(r) {}
+    double area() override { return 3.14 * radius * radius; }
+};
+
+class Rectangle : public Shape {
+private:
+    double length, width;
+public:
+    Rectangle(double l, double w) : length(l), width(w) {}
+    double area() override { return length * width; }
+};`
+      },
+      {
+        title: '5. Abstraction',
+        description: 'Show only essential features, hide implementation details using abstract classes & pure virtual functions.',
+        code: `abstract class Vehicle {  // Abstract class
+protected:
+    string model;
+public:
+    Vehicle(string m) : model(m) {}
+    virtual void start() = 0;  // Pure virtual function
+    virtual void stop() = 0;   // Pure virtual function
+    
+    void displayModel() {  // Concrete method
+        cout << "Model: " << model << endl;
+    }
+};
+
+class Bike : public Vehicle {
+public:
+    Bike(string m) : Vehicle(m) {}
+    void start() override { cout << "Bike started with kick!" << endl; }
+    void stop() override { cout << "Bike stopped!" << endl; }
+};`
+      },
+      {
+        title: '6. Constructor & Destructor',
+        description: 'Constructor initializes objects (default, parameterized, copy). Destructor releases resources.',
+        code: `class Student {
+private:
+    string* name;
+    int age;
+
+public:
+    // Default constructor
+    Student() : name(new string("Unknown")), age(0) {}
+    
+    // Parameterized constructor
+    Student(string n, int a) : name(new string(n)), age(a) {}
+    
+    // Copy constructor
+    Student(const Student& other) : name(new string(*other.name)), age(other.age) {}
+    
+    // Destructor
+    ~Student() {
+        delete name;  // Release memory
+        cout << "Student object destroyed" << endl;
+    }
+    
+    void display() { cout << *name << ", Age: " << age << endl; }
+};`
+      },
+      {
+        title: '7. Methods & Attributes',
+        description: 'Methods are functions defined inside a class. Attributes are variables that store object-specific data.',
+        code: `class Rectangle {
+private:
+    double length, width;  // Attributes (Data Members)
+
+public:
+    // Constructor method
+    Rectangle(double l, double w) : length(l), width(w) {}
+    
+    // Method to calculate area
+    double calculateArea() {
+        return length * width;
+    }
+    
+    // Method to calculate perimeter
+    double calculatePerimeter() {
+        return 2 * (length + width);
+    }
+    
+    // Getter methods
+    double getLength() { return length; }
+    double getWidth() { return width; }
+    
+    // Setter methods
+    void setLength(double l) { if(l > 0) length = l; }
+    void setWidth(double w) { if(w > 0) width = w; }
 };`
       }
     ],

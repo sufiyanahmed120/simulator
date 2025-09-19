@@ -8,9 +8,6 @@ import {
   Code2, 
   MessageCircle, 
   Play, 
-  User, 
-  Settings, 
-  LogOut,
   ChevronLeft,
   ChevronRight,
   Sun,
@@ -20,7 +17,6 @@ import {
   Home,
   BarChart3
 } from 'lucide-react';
-import { useAuth } from './auth-provider';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 
@@ -36,9 +32,7 @@ export function Sidebar() {
   const [mounted, setMounted] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const pathname = usePathname();
-  const { user, signIn, signOut } = useAuth();
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = () => {
@@ -136,7 +130,7 @@ export function Sidebar() {
                   className={cn(
                     "flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 ease-in-out group hover:scale-105",
                     isActive
-                      ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold shadow-md"
+                      ? "bg-gradient-to-r from-blue-600/90 to-purple-600/90 text-white font-semibold shadow-lg"
                       : "text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800"
                   )}
                   title={isCollapsed ? item.name : undefined}
@@ -144,7 +138,7 @@ export function Sidebar() {
                 >
                   <item.icon className={cn(
                     "w-6 h-6 flex-shrink-0 transition-all duration-300 ease-in-out",
-                    isActive ? "text-emerald-600 dark:text-emerald-400" : "group-hover:scale-110"
+                    isActive ? "text-white" : "group-hover:scale-110"
                   )} />
                   {!isCollapsed && (
                     <span className="transition-all duration-300 ease-in-out">{item.name}</span>
@@ -170,86 +164,6 @@ export function Sidebar() {
             {!isCollapsed && <span>Toggle Theme</span>}
           </button>
 
-          {/* Profile Section */}
-          {user ? (
-            <div className="relative">
-              <button
-                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className={cn(
-                  "w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300 ease-in-out hover:scale-105",
-                  isCollapsed && "justify-center"
-                )}
-                title={isCollapsed ? user.displayName : undefined}
-              >
-                {user.photoURL ? (
-                  <img
-                    src={user.photoURL}
-                    alt={user.displayName}
-                    className="w-8 h-8 rounded-full flex-shrink-0 ring-2 ring-gray-200 dark:ring-gray-700"
-                  />
-                ) : (
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0 ring-2 ring-gray-200 dark:ring-gray-700">
-                    <User className="w-5 h-5 text-white" />
-                  </div>
-                )}
-                {!isCollapsed && (
-                  <div className="flex flex-col items-start">
-                    <span className="text-sm font-medium text-muted-foreground truncate">{user.displayName}</span>
-                    <span className="text-xs text-muted-foreground">Online</span>
-                  </div>
-                )}
-              </button>
-
-              {/* Profile Dropdown */}
-              {profileDropdownOpen && !isCollapsed && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute bottom-full left-0 mb-2 w-full bg-card border border-border rounded-lg shadow-xl py-2 backdrop-blur-sm"
-                >
-                  <Link
-                    href="/profile"
-                    className="flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200"
-                    onClick={() => setProfileDropdownOpen(false)}
-                  >
-                    <User className="w-4 h-4" />
-                    <span>Profile</span>
-                  </Link>
-                  <Link
-                    href="/settings"
-                    className="flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200"
-                    onClick={() => setProfileDropdownOpen(false)}
-                  >
-                    <Settings className="w-4 h-4" />
-                    <span>Settings</span>
-                  </Link>
-                  <button
-                    onClick={() => {
-                      signOut();
-                      setProfileDropdownOpen(false);
-                    }}
-                    className="flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 w-full"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span>Sign Out</span>
-                  </button>
-                </motion.div>
-              )}
-            </div>
-          ) : (
-            <button
-              onClick={signIn}
-              className={cn(
-                "w-full bg-gradient-to-r from-emerald-600 to-blue-600 text-white px-4 py-3 rounded-lg text-base font-medium hover:from-emerald-700 hover:to-blue-700 transition-all duration-300 ease-in-out hover:scale-105 shadow-lg hover:shadow-xl",
-                isCollapsed && "px-3"
-              )}
-              title={isCollapsed ? "Sign In" : undefined}
-            >
-              {isCollapsed ? <User className="w-6 h-6 mx-auto" /> : "Sign In"}
-            </button>
-          )}
         </div>
       </div>
     </>

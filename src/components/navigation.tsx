@@ -9,15 +9,11 @@ import {
   BookOpen, 
   MessageCircle, 
   Play, 
-  User, 
-  Settings, 
-  LogOut,
   Menu,
   X,
   Sun,
   Moon
 } from 'lucide-react';
-import { useAuth } from './auth-provider';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 
@@ -30,9 +26,7 @@ const navigation = [
 
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const pathname = usePathname();
-  const { user, signIn, signOut } = useAuth();
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = () => {
@@ -83,74 +77,6 @@ export function Navigation() {
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
 
-            {/* Profile */}
-            {user ? (
-              <div className="relative">
-                <button
-                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                  className="flex items-center space-x-2 p-2 rounded-md hover:bg-muted transition-colors"
-                >
-                  {user.photoURL ? (
-                    <img
-                      src={user.photoURL}
-                      alt={user.displayName}
-                      className="w-8 h-8 rounded-full"
-                    />
-                  ) : (
-                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                      <User className="w-4 h-4 text-primary-foreground" />
-                    </div>
-                  )}
-                  <span className="hidden sm:block text-sm font-medium">
-                    {user.displayName}
-                  </span>
-                </button>
-
-                {/* Profile Dropdown */}
-                {profileDropdownOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-md shadow-lg py-1 z-50"
-                  >
-                    <Link
-                      href="/profile"
-                      className="flex items-center space-x-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted"
-                      onClick={() => setProfileDropdownOpen(false)}
-                    >
-                      <User className="w-4 h-4" />
-                      <span>Profile</span>
-                    </Link>
-                    <Link
-                      href="/settings"
-                      className="flex items-center space-x-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted"
-                      onClick={() => setProfileDropdownOpen(false)}
-                    >
-                      <Settings className="w-4 h-4" />
-                      <span>Settings</span>
-                    </Link>
-                    <button
-                      onClick={() => {
-                        signOut();
-                        setProfileDropdownOpen(false);
-                      }}
-                      className="flex items-center space-x-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted w-full"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      <span>Sign Out</span>
-                    </button>
-                  </motion.div>
-                )}
-              </div>
-            ) : (
-              <button
-                onClick={signIn}
-                className="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
-              >
-                Sign In
-              </button>
-            )}
 
             {/* Mobile menu button */}
             <button

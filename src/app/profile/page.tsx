@@ -3,26 +3,22 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Star, Calendar, Mail, User, Award, Target, TrendingUp } from 'lucide-react';
-import { useAuth } from '@/components/auth-provider';
 import { formatXP, calculateLevel, getLevelProgress } from '@/lib/utils';
 import Link from 'next/link';
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  // Mock user data for demonstration
+  const user = {
+    displayName: 'C++ Learner',
+    email: 'learner@example.com',
+    photoURL: null,
+    xp: 0,
+    level: 1,
+    completedModules: [],
+    createdAt: new Date(),
+    lastLoginAt: new Date()
+  };
 
-  if (!user) {
-    return (
-      <div className="max-w-4xl mx-auto text-center py-12">
-        <h1 className="text-2xl font-bold mb-4">Please sign in to view your profile</h1>
-        <Link
-          href="/"
-          className="bg-primary text-primary-foreground px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors"
-        >
-          Go to Dashboard
-        </Link>
-      </div>
-    );
-  }
 
   const level = calculateLevel(user.xp);
   const progress = getLevelProgress(user.xp);
