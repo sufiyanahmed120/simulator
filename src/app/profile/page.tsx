@@ -4,7 +4,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Star, Calendar, Mail, User, Award, Target, TrendingUp } from 'lucide-react';
 import { formatXP, calculateLevel, getLevelProgress } from '@/lib/utils';
-import Link from 'next/link';
 
 export default function ProfilePage() {
   // Mock user data for demonstration

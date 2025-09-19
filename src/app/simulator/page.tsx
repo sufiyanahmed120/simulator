@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, StepForward, RotateCcw, Copy, Download, Upload, Settings, Terminal, HardDrive } from 'lucide-react';
+import { Play, RotateCcw, Copy, Download, Upload, Settings, Terminal, HardDrive } from 'lucide-react';
 import { editor } from 'monaco-editor';
 
 import { ExecutionResult, MemoryVariable, ExecutionStep } from '@/types';
@@ -40,7 +40,6 @@ int main() {
 export default function SimulatorPage() {
   const [code, setCode] = useState(defaultCode);
   const [isRunning, setIsRunning] = useState(false);
-  const [isStepping, setIsStepping] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [executionResult, setExecutionResult] = useState<ExecutionResult | null>(null);
   const [executionSteps, setExecutionSteps] = useState<ExecutionStep[]>([]);
@@ -144,23 +143,9 @@ export default function SimulatorPage() {
     }
   };
 
-  const stepThroughCode = () => {
-    if (executionSteps.length === 0) {
-      runCode();
-      return;
-    }
-
-    setIsStepping(true);
-    if (currentStep < executionSteps.length - 1) {
-      setCurrentStep(prev => prev + 1);
-    } else {
-      setIsStepping(false);
-    }
-  };
 
   const resetExecution = () => {
     setCurrentStep(0);
-    setIsStepping(false);
     setExecutionResult(null);
     setExecutionSteps([]);
     

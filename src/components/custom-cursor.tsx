@@ -10,8 +10,6 @@ export function CustomCursor() {
     setMounted(true);
     
     let animationFrame: number;
-    const trails: Array<{ x: number; y: number; id: number }> = [];
-    let trailId = 0;
 
     const updateCursor = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
