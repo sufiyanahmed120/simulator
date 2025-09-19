@@ -134,7 +134,7 @@ export default function TutorPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto h-full flex flex-col bg-gradient-to-br from-slate-50/50 via-blue-50/30 to-purple-50/50 dark:from-slate-900/50 dark:via-blue-950/30 dark:to-purple-950/50 rounded-xl p-6">
+    <div className="w-full max-w-4xl mx-auto h-full flex flex-col bg-gradient-to-br from-slate-50/50 via-blue-50/30 to-purple-50/50 dark:from-slate-900/50 dark:via-blue-950/30 dark:to-purple-950/50 rounded-xl p-3 sm:p-6">
       {/* Header */}
       <div className="text-center mb-6">
         <h1 className="text-3xl font-bold gradient-text mb-2">AI Tutor</h1>
@@ -155,7 +155,7 @@ export default function TutorPage() {
               transition={{ duration: 0.3, ease: "easeOut" }}
               className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
-              <div className={`flex items-start space-x-3 max-w-[85%] ${message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+              <div className={`flex items-start space-x-2 sm:space-x-3 max-w-[90%] sm:max-w-[85%] ${message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                 {/* Avatar */}
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ${
                   message.role === 'user' 

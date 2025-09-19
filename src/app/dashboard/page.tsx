@@ -49,7 +49,7 @@ export default function DashboardPage() {
 
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 h-full">
+    <div className="w-full max-w-6xl mx-auto space-y-6 sm:space-y-8 h-full px-2 sm:px-4">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -69,7 +69,7 @@ export default function DashboardPage() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
       >
         {/* XP Progress Card */}
         <motion.div

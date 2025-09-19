@@ -244,30 +244,101 @@ cout << "Rectangle area: " << rect.area() << endl;`
     ]
   },
   'operators': {
-    introduction: 'Operators are symbols that perform operations on variables and values. C++ provides a rich set of operators including arithmetic, comparison, logical, and bitwise operators. Understanding operator precedence is crucial for writing correct expressions.',
+    introduction: 'Operators are special symbols that tell the compiler to perform specific operations on variables and values. They act on operands (variables or constants) to produce a result.',
     examples: [
       {
-        title: 'Arithmetic Operators',
-        description: 'Basic mathematical operations in C++.',
-        code: `int a = 10, b = 3;
-int sum = a + b;        // Addition: 13
-int diff = a - b;       // Subtraction: 7
-int product = a * b;    // Multiplication: 30
-int quotient = a / b;   // Division: 3
-int remainder = a % b;  // Modulus: 1`
+        title: '1. Arithmetic Operators',
+        description: 'Arithmetic operators are used to perform basic mathematical operations: + Addition, - Subtraction, * Multiplication, / Division, % Modulus (remainder).',
+        code: `#include <iostream>
+using namespace std;
+
+int main() {
+    int a = 10, b = 3;
+
+    cout << "Addition: " << (a + b) << endl;
+    cout << "Subtraction: " << (a - b) << endl;
+    cout << "Multiplication: " << (a * b) << endl;
+    cout << "Division: " << (a / b) << endl;     // integer division
+    cout << "Modulus: " << (a % b) << endl;     // remainder
+
+    return 0;
+}`
       },
       {
-        title: 'Comparison and Logical',
-        description: 'Comparing values and combining conditions.',
-        code: `int x = 5, y = 10;
-bool isEqual = (x == y);        // false
-bool isLess = (x < y);          // true
-bool isGreater = (x > y);       // false
+        title: '2. Comparison Operators',
+        description: 'Comparison operators are used to compare two values. They return either true (1) or false (0): == Equal to, != Not equal to, > Greater than, < Less than, >= Greater or equal, <= Less or equal.',
+        code: `#include <iostream>
+using namespace std;
 
-bool condition1 = true;
-bool condition2 = false;
-bool result = condition1 && condition2;  // false (AND)
-bool result2 = condition1 || condition2; // true (OR)`
+int main() {
+    int x = 5, y = 10;
+
+    cout << (x == y) << endl;  // 0 (false)
+    cout << (x != y) << endl;  // 1 (true)
+    cout << (x > y) << endl;   // 0
+    cout << (x < y) << endl;   // 1
+    cout << (x >= 5) << endl;  // 1
+    cout << (y <= 5) << endl;  // 0
+
+    return 0;
+}`
+      },
+      {
+        title: '3. Logical Operators',
+        description: 'Logical operators are used to combine conditions: && (AND) → true if both conditions are true, || (OR) → true if at least one condition is true, ! (NOT) → reverses result (true → false).',
+        code: `#include <iostream>
+using namespace std;
+
+int main() {
+    int age = 20;
+    bool hasID = true;
+
+    if (age >= 18 && hasID) {
+        cout << "Allowed to enter" << endl;
+    }
+
+    if (age < 18 || !hasID) {
+        cout << "Not allowed to enter" << endl;
+    }
+
+    return 0;
+}`
+      },
+      {
+        title: '4. Bitwise Operators',
+        description: 'Bitwise operators work on bits (0s and 1s) of numbers: & (AND), | (OR), ^ (XOR), ~ (NOT), << (Left Shift), >> (Right Shift).',
+        code: `#include <iostream>
+using namespace std;
+
+int main() {
+    int a = 5;  // 0101 in binary
+    int b = 3;  // 0011 in binary
+
+    cout << (a & b) << endl;  // 1 (0001)
+    cout << (a | b) << endl;  // 7 (0111)
+    cout << (a ^ b) << endl;  // 6 (0110)
+    cout << (~a) << endl;     // -6 (2's complement)
+    cout << (a << 1) << endl; // 10 (shift left)
+    cout << (a >> 1) << endl; // 2 (shift right)
+
+    return 0;
+}`
+      },
+      {
+        title: '5. Operator Precedence',
+        description: 'When multiple operators appear, precedence decides which executes first. Example: * and / have higher precedence than + and -. Use () parentheses to change the order.',
+        code: `#include <iostream>
+using namespace std;
+
+int main() {
+    int result = 10 + 5 * 2;   // Multiplication happens first → 10 + 10 = 20
+    int result2 = (10 + 5) * 2; // Parentheses change order → 15 * 2 = 30
+
+    cout << "Result without (): " << result << endl;
+    cout << "Result with (): " << result2 << endl;
+
+    return 0;
+}`
       }
     ],
     uses: [
@@ -286,39 +357,91 @@ bool result2 = condition1 || condition2; // true (OR)`
     ]
   },
   'flow-control': {
-    introduction: 'Flow control statements allow you to control the execution of your program. They include conditional statements (if-else, switch) that execute different code blocks based on conditions, and loops that repeat code execution.',
+    introduction: 'Flow control statements allow you to control the execution of your program based on conditions. They help make decisions and execute different code blocks depending on various scenarios.',
     examples: [
       {
-        title: 'If-Else Statements',
-        description: 'Conditional execution based on boolean expressions.',
-        code: `int score = 85;
+        title: '1. If-Else',
+        description: 'The if-else statement is used to make decisions in a program. If a condition is true → one block of code runs. Else → another block runs.',
+        code: `#include <iostream>
+using namespace std;
 
-if (score >= 90) {
-    cout << "Grade: A" << endl;
-} else if (score >= 80) {
-    cout << "Grade: B" << endl;
-} else if (score >= 70) {
-    cout << "Grade: C" << endl;
-} else {
-    cout << "Grade: F" << endl;
+int main() {
+    int age = 18;
+
+    if (age >= 18) {
+        cout << "You are eligible to vote.";
+    } else {
+        cout << "You are not eligible to vote.";
+    }
+
+    return 0;
 }`
       },
       {
-        title: 'Switch Statement',
-        description: 'Multi-way branching based on a single value.',
-        code: `int day = 3;
-switch (day) {
-    case 1:
-        cout << "Monday" << endl;
-        break;
-    case 2:
-        cout << "Tuesday" << endl;
-        break;
-    case 3:
-        cout << "Wednesday" << endl;
-        break;
-    default:
-        cout << "Other day" << endl;
+        title: '2. Nested If-Else',
+        description: 'When one if-else statement is inside another, it\'s called a nested if-else. Used when we need to check multiple conditions step by step.',
+        code: `#include <iostream>
+using namespace std;
+
+int main() {
+    int marks = 85;
+
+    if (marks >= 90) {
+        cout << "Grade: A";
+    } else if (marks >= 75) {
+        cout << "Grade: B";
+    } else if (marks >= 50) {
+        cout << "Grade: C";
+    } else {
+        cout << "Fail";
+    }
+
+    return 0;
+}`
+      },
+      {
+        title: '3. Switch',
+        description: 'The switch statement is used when we want to select one option from many choices. It\'s simpler than writing multiple if-else for fixed values.',
+        code: `#include <iostream>
+using namespace std;
+
+int main() {
+    int day = 3;
+
+    switch (day) {
+        case 1: cout << "Monday"; break;
+        case 2: cout << "Tuesday"; break;
+        case 3: cout << "Wednesday"; break;
+        case 4: cout << "Thursday"; break;
+        case 5: cout << "Friday"; break;
+        case 6: cout << "Saturday"; break;
+        case 7: cout << "Sunday"; break;
+        default: cout << "Invalid day";
+    }
+
+    return 0;
+}`
+      },
+      {
+        title: '4. Problem Solving (using if-else / switch)',
+        description: 'Problem solving in C++ means breaking a problem into smaller steps and using conditions (if-else/switch) to find solutions.',
+        code: `#include <iostream>
+using namespace std;
+
+int main() {
+    int a, b, c;
+    cout << "Enter three numbers: ";
+    cin >> a >> b >> c;
+
+    if (a >= b && a >= c) {
+        cout << "Largest is: " << a;
+    } else if (b >= a && b >= c) {
+        cout << "Largest is: " << b;
+    } else {
+        cout << "Largest is: " << c;
+    }
+
+    return 0;
 }`
       }
     ],
@@ -390,39 +513,110 @@ string add(string a, string b) {
     ]
   },
   'loops': {
-    introduction: 'Loops are control structures that repeat a block of code multiple times. C++ provides three main types of loops: while, for, and do-while. Each has its own use case and syntax, and they can be nested for complex iterations.',
+    introduction: 'Loops let us repeat a block of code multiple times under a certain condition. C++ provides several loop types: while, for, and do-while. These can also be nested (a loop inside another loop).',
     examples: [
       {
-        title: 'For Loop',
-        description: 'Iterating a specific number of times with a counter.',
-        code: `// Count from 1 to 5
-for (int i = 1; i <= 5; i++) {
-    cout << i << " ";
-}
-cout << endl;
+        title: '1. While Loop',
+        description: 'A while loop repeatedly executes its block of code as long as a given condition is true. It is an entry-controlled loop (the condition is checked before each iteration) and is often used when you don\'t know in advance how many times the loop should run.',
+        code: `#include <iostream>
+using namespace std;
 
-// Iterate through array
-int numbers[] = {1, 2, 3, 4, 5};
-for (int i = 0; i < 5; i++) {
-    cout << numbers[i] << " ";
+int main() {
+    // Example: Print numbers 1 to 5 using a while loop
+    int i = 1;              // initialize counter to 1
+    while (i <= 5) {        // loop condition: continue while i is at most 5
+        cout << i << "\\n";  // print the current value of i
+        i++;                // increment i by 1
+    }
+    return 0;
+}
+
+// How It Works: The loop starts with i = 1. Each time through the loop it prints i, 
+// then increments i. Once i becomes 6, the condition i <= 5 is false and the loop stops. 
+// This program prints the numbers 1 through 5.`
+      },
+      {
+        title: '2. For Loop',
+        description: 'A for loop is designed to repeat a block of code a specific number of times. Its syntax combines three parts in one line: initialization, condition, and update. It\'s especially useful when you know beforehand how many times you want to loop.',
+        code: `#include <iostream>
+using namespace std;
+
+int main() {
+    // Example: Print numbers 1 to 5 using a for loop
+    for (int i = 1; i <= 5; i++) {  // i starts at 1, loop runs while i<=5, then i increases each time
+        cout << i << "\\n";         // print current value of i
+    }
+    return 0;
+}
+
+// How It Works: In this loop, i is initialized to 1. Before each iteration, it checks i <= 5. 
+// It prints i and then the i++ in the loop header increments i. The loop runs for i = 1,2,3,4,5, 
+// printing those numbers. When i becomes 6, the loop ends. The output is 1 2 3 4 5.`
+      },
+      {
+        title: '3. Do-While Loop',
+        description: 'A do-while loop is like a while loop, but its condition is checked after the loop body. This guarantees that the loop body runs at least once. It is useful when you want the loop to run first and then repeat based on a condition.',
+        code: `#include <iostream>
+using namespace std;
+
+int main() {
+    // Example: Print numbers 1 to 5 using a do-while loop
+    int i = 1;              // initialize counter to 1
+    do {
+        cout << i << "\\n";  // print current value of i
+        i++;                // increment i by 1
+    } while (i <= 5);       // check condition after loop body
+    return 0;
+}
+
+// How It Works: The code inside do { … } runs once with i = 1, printing 1. 
+// Then it checks i <= 5; since i is now 2, it repeats. It continues printing and 
+// incrementing until i becomes 6. At that point i <= 5 is false and the loop stops.`
+      },
+      {
+        title: '4. Nested Loops',
+        description: 'A nested loop is simply a loop inside another loop. The inner loop runs completely for each single iteration of the outer loop. This is useful for working with tables, grids, or multi-dimensional data.',
+        code: `#include <iostream>
+using namespace std;
+
+int main() {
+    // Example: Nested loops printing pairs (i, j)
+    for (int i = 1; i <= 3; i++) {       // outer loop: i = 1, 2, 3
+        for (int j = 1; j <= 2; j++) {   // inner loop: j = 1, 2
+            cout << "i=" << i << ", j=" << j << "\\n";
+            // This line runs 3*2 = 6 times in total
+        }
+    }
+    return 0;
 }`
       },
       {
-        title: 'While and Do-While',
-        description: 'Conditional loops that continue while a condition is true.',
-        code: `// While loop
-int count = 0;
-while (count < 5) {
-    cout << count << " ";
-    count++;
-}
+        title: '5. Break and Continue',
+        description: 'Break immediately exits the nearest enclosing loop. Continue skips the rest of the current loop iteration and jumps to the next iteration.',
+        code: `#include <iostream>
+using namespace std;
 
-// Do-while loop (executes at least once)
-int num = 1;
-do {
-    cout << num << " ";
-    num++;
-} while (num <= 5);`
+int main() {
+    // Break Example: Break out of loop when i reaches 5
+    cout << "Break example: ";
+    for (int i = 1; i <= 10; i++) {
+        if (i == 5) {
+            break;               // exit the loop when i is 5
+        }
+        cout << i << " ";      // prints 1,2,3,4 then stops
+    }
+    
+    cout << "\\nContinue example: ";
+    // Continue Example: Skip even numbers using continue
+    for (int i = 1; i <= 5; i++) {
+        if (i % 2 == 0) {
+            continue;            // skip the rest of this loop iteration for even i
+        }
+        cout << i << " ";      // prints only odd numbers: 1, 3, 5
+    }
+    
+    return 0;
+}`
       }
     ],
     uses: [

@@ -273,7 +273,7 @@ export default function SimulatorPage() {
   const currentStepData = executionSteps[currentStep] || null;
 
   return (
-    <div className="w-full h-[calc(100vh-100px)] flex flex-col px-4">
+    <div className="w-full h-[calc(100vh-100px)] flex flex-col px-2 sm:px-4 lg:px-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6 flex-shrink-0">
         <div>
@@ -311,7 +311,7 @@ export default function SimulatorPage() {
         </div>
       </div>
 
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-0">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 min-h-0">
         {/* Editor Section */}
         <div className="flex flex-col">
           <div className="flex items-center justify-between mb-4 flex-shrink-0">

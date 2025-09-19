@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Sidebar } from "@/components/sidebar";
+import { CustomCursor } from "@/components/custom-cursor";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,8 +30,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="min-h-screen bg-background">
+            <CustomCursor />
             <Sidebar />
-            <main className="main-content pt-20 lg:pt-8 p-4 lg:p-8 relative overflow-hidden">
+            <main className="main-content pt-4 lg:pt-8 px-2 sm:px-4 lg:px-8 pb-4 lg:pb-8 relative overflow-hidden lg:ml-64">
               {/* Animated Background */}
               <div className="absolute inset-0 -z-10">
                 {/* Gradient Background */}

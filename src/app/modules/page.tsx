@@ -32,7 +32,7 @@ export default function ModulesPage() {
 
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="w-full max-w-6xl mx-auto space-y-6 sm:space-y-8 px-2 sm:px-4">
       {/* Header */}
       <div className="text-center">
         <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-4">
@@ -96,7 +96,7 @@ export default function ModulesPage() {
       </div>
 
       {/* Modules Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {filteredModules.map((module, index) => {
                       const isCompleted = false; // Module completion tracking removed
           
@@ -109,7 +109,7 @@ export default function ModulesPage() {
               className="group"
             >
               <Link href={`/modules/${module.id}`}>
-                <div className="bg-card border border-border rounded-lg p-6 hover:shadow-lg transition-all duration-300 h-full">
+                <div className="bg-card border border-border rounded-lg p-4 sm:p-6 hover:shadow-lg transition-all duration-300 h-full">
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-2">

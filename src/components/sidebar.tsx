@@ -81,7 +81,7 @@ export function Sidebar() {
 
       {/* Sidebar */}
       <div className={cn(
-        "sidebar fixed left-0 top-0 h-full bg-card border-r border-border z-50 shadow-lg",
+        "sidebar fixed left-0 top-0 h-full bg-card border-r border-border z-50 shadow-lg w-64 lg:w-64",
         isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
       )}>
         {/* Logo Section */}
